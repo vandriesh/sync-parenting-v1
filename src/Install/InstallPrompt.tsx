@@ -4,17 +4,24 @@ import { Share, Plus, MonitorDown } from "lucide-react";
 
 function InstallPrompt() {
   const [isIOS, setIsIOS] = useState(false);
-  const [isAndroid, setIsAndroid] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const [isBrowser, setIsBrowser] = useState(false);
+  const [isSafari, setIsSafari] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
-    setIsIOS(
-      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
-    );
-    setIsAndroid(/(Android)/i.test(navigator.userAgent));
-    setIsBrowser(/(Chrome)/i.test(navigator.userAgent));
+    const ua = navigator.userAgent;
+    const ios = /iPad|iPhone|iPod/.test(ua) && !(window as any).MSStream;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+    const isDesktop = !/iPhone|iPad|iPod|Android/i.test(ua);
+    const isChrome = /Chrome/i.test(ua);
 
+    console.log({ isSafari, isDesktop, ios, ua, isChrome });
+
+    setIsBrowser(isChrome);
+    setIsSafari(isSafari);
+    setIsIOS(ios);
+    setIsDesktop(isDesktop);
     setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
   }, []);
 
@@ -27,19 +34,17 @@ function InstallPrompt() {
   }
 
   return (
-    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl  border border-gray-200 dark:border-gray-700 p-6 max-w-sm mx-4 backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
+    <div className="fixed bottom-6">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl  border-gray-200 dark:border-gray-700 p-6 sm:p-2 max-w-sm mx-4 backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
         {isIOS ? (
           <InstallPromptIOS />
-        ) : isAndroid ? (
+        ) : isBrowser && isDesktop ? (
           <InstallChrome />
-        ) : isBrowser ? (
-          <InstallChrome />
-        ) : (
+        ) : isSafari ? (
           <NoBrowserSupport />
-        )}
+        ) : null}
 
-        {(isIOS || isAndroid || isBrowser) && (
+        {(isIOS || isBrowser) && (
           <div className="mt-4 text-center">
             <button
               onClick={skipPrompt}
