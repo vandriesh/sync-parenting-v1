@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/docs/*": ["./src/*"]
+      "@/docs/*": ["./src/*"],
+      "@/ui-kit/*": ["./src/ui-kit/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
