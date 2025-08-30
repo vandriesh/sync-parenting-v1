@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:exp": "next dev --experimental-https",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome check",
